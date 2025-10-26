@@ -28,10 +28,10 @@ const Contact = () => {
           
           <div className="inline-block mb-12">
             <a 
-              href="mailto:calubrossy@gmail.com"
+              href="mailto:contact@calogerobrossy.com"
               className="text-3xl md:text-4xl font-semibold text-black hover:text-gray-600 transition-colors duration-300 border-b-2 border-black/30 hover:border-black"
             >
-              calubrossy@gmail.com
+              contact@calogerobrossy.com
             </a>
           </div>
           
@@ -61,7 +61,7 @@ const Contact = () => {
               <Twitter className="h-6 w-6" />
             </a>
             <a 
-              href="mailto:calubrossy@gmail.com"
+              href="mailto:contact@calogerobrossy.com"
               className="text-gray-400 hover:text-black transition-colors duration-300"
             >
               <Mail className="h-6 w-6" />

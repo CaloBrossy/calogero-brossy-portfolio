@@ -99,10 +99,10 @@ const Hero = () => {
         }}
       >
         <a 
-          href="mailto:calubrossy@gmail.com"
+          href="mailto:contact@calogerobrossy.com"
           className="text-sm text-gray-400 hover:text-white transition-colors duration-300 tracking-widest uppercase"
         >
-          calubrossy@gmail.com
+          contact@calogerobrossy.com
         </a>
       </div>
     </section>
