@@ -41,6 +41,7 @@ const projects = [
       github: "#",
       live: "https://asidesimple.ar",
     },
+    disabled: true,
   },
 ];
 
@@ -116,15 +117,22 @@ const ProjectCard = ({ project, index }: { project: typeof projects[0], index: n
         </div>
         
         <div className="flex gap-3">
-          <a 
-            href={project.links.live}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-600 text-gray-300 hover:bg-purple-500 hover:text-white hover:border-purple-500 transition-all duration-300 rounded-lg text-sm font-medium group/btn"
-          >
-            <ExternalLink className="h-4 w-4 group-hover/btn:scale-110 transition-transform" />
-            Ver Proyecto
-          </a>
+          {project.disabled ? (
+            <div className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-600 text-gray-500 rounded-lg text-sm font-medium cursor-not-allowed opacity-50">
+              <ExternalLink className="h-4 w-4" />
+              On Working
+            </div>
+          ) : (
+            <a 
+              href={project.links.live}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-600 text-gray-300 hover:bg-purple-500 hover:text-white hover:border-purple-500 transition-all duration-300 rounded-lg text-sm font-medium group/btn"
+            >
+              <ExternalLink className="h-4 w-4 group-hover/btn:scale-110 transition-transform" />
+              Ver Proyecto
+            </a>
+          )}
         </div>
       </div>
     </div>
