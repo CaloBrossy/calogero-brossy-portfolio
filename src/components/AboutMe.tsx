@@ -1,6 +1,8 @@
 import { User, Briefcase, Heart } from "lucide-react";
 import ParticlesBackground from "./ParticlesBackground";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 const aboutData = [
   {
@@ -35,6 +37,23 @@ const aboutData = [
   }
 ];
 
+const TypingText = ({ text, delay = 0 }: { text: string; delay?: number }) => {
+  const [displayedText, setDisplayedText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedText(prev => prev + text[currentIndex]);
+        setCurrentIndex(prev => prev + 1);
+      }, 50);
+      return () => clearTimeout(timeout);
+    }
+  }, [currentIndex, text]);
+
+  return <span>{displayedText}</span>;
+};
+
 const AboutMe = () => {
   const { ref, isVisible } = useScrollAnimation({ threshold: 0.1 });
 
@@ -46,9 +65,14 @@ const AboutMe = () => {
       }`}>
         <div className="mb-20">
           <div className="flex items-center gap-4 mb-6">
-            <span className="text-sm uppercase tracking-widest text-gray-400 font-light">
-              About
-            </span>
+            <motion.span 
+              className="text-sm uppercase tracking-widest text-gray-400 font-light"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: isVisible ? 1 : 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <TypingText text="About" />
+            </motion.span>
             <div className="h-px w-16 bg-gray-300" />
           </div>
           <h2 className="text-5xl md:text-6xl font-bold text-black tracking-tight lowercase mb-6">
@@ -66,11 +90,22 @@ const AboutMe = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {aboutData.map((item, index) => {
             const Icon = item.icon;
+            const isEven = index % 2 === 0;
             return (
-              <div
+              <motion.div
                 key={item.title}
-                className="bg-gray-50 border border-gray-200 rounded-lg p-8 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-slide-in group"
-                style={{ animationDelay: `${index * 0.1}s` }}
+                className="bg-gray-50 border border-gray-200 rounded-lg p-8 group"
+                initial={{ opacity: 0, x: isEven ? -50 : 50 }}
+                animate={isVisible ? { opacity: 1, x: 0 } : { opacity: 0, x: isEven ? -50 : 50 }}
+                transition={{ 
+                  duration: 0.6, 
+                  delay: index * 0.2,
+                  ease: "easeOut"
+                }}
+                whileHover={{ 
+                  y: -5,
+                  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.1)"
+                }}
               >
                 <div className="flex items-center gap-3 mb-6">
                   <div className="p-2 rounded-lg bg-gray-900 group-hover:bg-purple-500 transition-colors">
@@ -90,7 +125,7 @@ const AboutMe = () => {
                     </li>
                   ))}
                 </ul>
-              </div>
+              </motion.div>
             );
           })}
         </div>

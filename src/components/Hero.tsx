@@ -1,5 +1,6 @@
 import { Github, Linkedin, Mail, ExternalLink } from "lucide-react";
 import { useState, useRef } from "react";
+import { motion } from "framer-motion";
 
 // Componente para texto con efecto hover letra por letra
 const LetterByLetterText = ({ text, className = "" }: { text: string; className?: string }) => {
@@ -44,58 +45,103 @@ const Hero = () => {
       </div>
       
       {/* Content */}
-      <div className="relative z-10 max-w-6xl mx-auto px-8 animate-slide-up">
+      <div className="relative z-10 max-w-6xl mx-auto px-8">
         {/* Top Label with Line */}
-        <div className="flex items-center gap-4 mb-8">
+        <motion.div 
+          className="flex items-center gap-4 mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
           <span className="text-sm uppercase tracking-widest text-gray-400 font-light">Hello</span>
           <div className="h-px w-16 bg-gray-600" />
-        </div>
+        </motion.div>
 
         {/* Main Title */}
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-light leading-tight mb-6 text-white">
+        <motion.h1 
+          className="text-5xl md:text-7xl lg:text-8xl font-light leading-tight mb-6 text-white"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+        >
           <span className="block lowercase">My name is</span>
           <span className="block font-bold  hover:text-purple-500 transition-colors duration-300">Calogero Brossy</span>
-        </h1>
+        </motion.h1>
 
         {/* Description */}
-        <p className="text-lg md:text-xl text-gray-300 max-w-3xl leading-relaxed mb-12">
+        <motion.p 
+          className="text-lg md:text-xl text-gray-300 max-w-3xl leading-relaxed mb-12"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+        >
           Fullstack Developer creating exceptional web experiences with React, TypeScript 
           and modern technologies. Specialized in modern interfaces and scalable architectures.
-        </p>
+        </motion.p>
 
         {/* Small Label Bottom */}
-        <div className="flex items-center gap-4">
+        <motion.div 
+          className="flex items-center gap-4"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.8 }}
+        >
           <div className="h-px w-16 bg-gray-600" />
           <span className="text-sm uppercase tracking-widest text-gray-400 font-light">Available for projects</span>
-        </div>
+        </motion.div>
       </div>
 
       {/* Left Sidebar - Social Icons */}
-      <div className="fixed left-8 bottom-8 z-20 flex flex-col gap-6 animate-slide-in" style={{ animationDelay: "0.5s" }}>
-        <a 
+      <motion.div 
+        className="fixed left-8 bottom-8 z-20 flex flex-col gap-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.5 }}
+      >
+        <motion.a 
           href="https://github.com/CaloBrossy" 
           target="_blank" 
           rel="noopener noreferrer"
           className="text-gray-400 hover:text-white transition-colors duration-300"
+          whileHover={{ 
+            rotate: 360, 
+            scale: 1.1,
+            boxShadow: "0 0 20px rgba(168, 85, 247, 0.5)"
+          }}
+          transition={{ duration: 0.3 }}
         >
           <Github className="h-5 w-5" />
-        </a>
-        <a 
+        </motion.a>
+        <motion.a 
           href="www.linkedin.com/in/calogero-brossy" 
           target="_blank" 
           rel="noopener noreferrer"
           className="text-gray-400 hover:text-white transition-colors duration-300"
+          whileHover={{ 
+            rotate: 360, 
+            scale: 1.1,
+            boxShadow: "0 0 20px rgba(168, 85, 247, 0.5)"
+          }}
+          transition={{ duration: 0.3 }}
         >
           <Linkedin className="h-5 w-5" />
-        </a>
-      </div>
+        </motion.a>
+      </motion.div>
 
       {/* Right Sidebar - Email Rotated */}
-      <div 
+      <motion.div 
         className="fixed right-8 top-1/2 -translate-y-1/2 z-20 writing-vertical-rl"
         style={{ 
           writingMode: 'vertical-rl',
           textOrientation: 'mixed'
+        }}
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ 
+          type: "spring",
+          stiffness: 200,
+          damping: 15,
+          delay: 0.4
         }}
       >
         <a 
@@ -104,7 +150,7 @@ const Hero = () => {
         >
           contact@calogerobrossy.com
         </a>
-      </div>
+      </motion.div>
     </section>
   );
 };
