@@ -2,7 +2,7 @@ import { ExternalLink } from "lucide-react";
 import ParticlesBackground from "./ParticlesBackground";
 import { useScrollAnimation } from "@/hooks/use-scroll-animation";
 import { useParallax } from "@/hooks/use-parallax";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, useInView } from "framer-motion";
 
 const projects = [
@@ -48,6 +48,7 @@ const projects = [
 
 const ProjectCard = ({ project, index }: { project: typeof projects[0], index: number }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, margin: "-100px" });
   const { offset: cardOffset } = useParallax({ speed: 0.1, elementRef: cardRef });
@@ -55,13 +56,14 @@ const ProjectCard = ({ project, index }: { project: typeof projects[0], index: n
   const { offset: overlayOffset } = useParallax({ speed: 0.2, elementRef: cardRef });
   const { offset: glowOffset } = useParallax({ speed: 0.4, elementRef: cardRef });
 
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % project.images.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + project.images.length) % project.images.length);
-  };
+  // Cambiar imagen automáticamente en hover si hay múltiples imágenes
+  useEffect(() => {
+    if (!isHovered || project.images.length <= 1) return;
+    const timer = setTimeout(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % project.images.length);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [isHovered, project.images.length]);
 
   return (
     <motion.div
@@ -71,6 +73,8 @@ const ProjectCard = ({ project, index }: { project: typeof projects[0], index: n
       initial={{ height: 0, opacity: 0 }}
       animate={isInView ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
       transition={{ duration: 0.6, delay: index * 0.1 }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Efecto de brillo sutil */}
       <div 
@@ -79,28 +83,23 @@ const ProjectCard = ({ project, index }: { project: typeof projects[0], index: n
       />
       
       <div className="relative h-64 overflow-hidden bg-gray-900 group">
-        {/* Contenedor de imágenes con carousel */}
-        <motion.div 
-          className="absolute inset-0 flex"
-          animate={{
-            x: `-${currentImageIndex * 100}%`
-          }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
-          style={{ width: `${project.images.length * 100}%` }}
-        >
+        {/* Contenedor de imágenes */}
+        <div className="absolute inset-0">
           {project.images.map((image, idx) => (
-            <img 
+            <motion.img 
               key={idx}
               src={image} 
               alt={`${project.title} - ${idx + 1}`}
-              className="w-full h-full object-cover flex-shrink-0"
-              style={{ 
-                transform: `translateY(${imageOffset}px)`,
-                width: `${100 / project.images.length}%`
+              className="absolute inset-0 w-full h-full object-cover"
+              initial={{ opacity: idx === 0 ? 1 : 0 }}
+              animate={{ 
+                opacity: idx === currentImageIndex ? 1 : 0
               }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+              style={{ transform: `translateY(${imageOffset}px)` }}
             />
           ))}
-        </motion.div>
+        </div>
         
         {/* Overlay oscuro que se aclara en hover */}
         <div 
@@ -110,13 +109,16 @@ const ProjectCard = ({ project, index }: { project: typeof projects[0], index: n
         
         {/* Indicadores de imagen (dots) - solo si hay más de una imagen */}
         {project.images.length > 1 && (
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-20">
             {project.images.map((_, idx) => (
               <button
                 key={idx}
-                onClick={() => setCurrentImageIndex(idx)}
-                className={`w-2 h-2 rounded-full transition-all ${
-                  idx === currentImageIndex ? 'bg-purple-500 w-6' : 'bg-gray-600'
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentImageIndex(idx);
+                }}
+                className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
+                  idx === currentImageIndex ? 'bg-purple-500 w-6' : 'bg-gray-600 hover:bg-gray-500'
                 }`}
                 aria-label={`Imagen ${idx + 1}`}
               />
